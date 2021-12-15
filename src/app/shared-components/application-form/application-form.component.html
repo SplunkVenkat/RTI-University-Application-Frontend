@@ -1,0 +1,46 @@
+<form [formGroup]="applicationForm">
+  <ng-container formArrayName="forms">
+    <ng-container *ngFor="let fields of applicationFields;let i=index" >
+      <h2>{{fields.title}}</h2>
+      <hr>
+    <ng-container  *ngFor="let field of fields.formFields;" [formGroupName]="i" [ngSwitch]="field.type">
+    <div class="row mb-3" *ngSwitchCase="'text'">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">{{field.label}}</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  formControlName={{field.formControlName}}>
+      </div>
+    </div>
+    <div class="row mb-3" *ngSwitchCase="'date'">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">{{field.label}}</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control"  formControlName={{field.formControlName}}  >
+      </div>
+    </div>
+    <div class="row mb-3" *ngSwitchCase="'dropdown'">
+        <!-- <label for="inputPassword3" class="col-sm-2 col-form-label">{{field.label}}</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control"  formControlName={{field.formControlName}}>
+        </div> -->
+        <label for="inputState" class="col-sm-2 col-form-label">{{field.label}}</label>
+        <div class="col-sm-10">
+        <select id="inputState" class="form-select" multiple="multiple" formControlName={{field.formControlName}}>
+          <option *ngFor="let i of field.options"  value={{i.id}}> {{i.value}}</option>
+        </select>
+        </div>
+      </div>
+    <fieldset class="row mb-3" *ngSwitchCase="'radio'">
+      <legend class="col-form-label col-sm-2 pt-0">{{field.label}}</legend>
+      <div class="col-sm-10">
+        <div class="form-check" *ngFor="let i of field.options">
+          <input class="form-check-input" type="radio" id={{i.id}}  value={{i.id}} formControlName={{field.formControlName}}>
+          <label class="form-check-label" for={{i.id}}>
+            {{i.value}}
+          </label>
+        </div>
+      </div>
+    </fieldset>
+</ng-container>
+</ng-container>
+</ng-container>
+<button type="button"  class="btn btn-primary" (click)="onValueChange('save','formgroup',applicationForm.value)">Save</button>
+  </form>
