@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-auto bg-light sticky-top">
+          <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+             <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
+                  <li class="nav-item">
+                      <a routerLink="/create-application" (click)="headerTitle='Create Application'" [state]="{data: {mode:'freshapplication'}}" routerLinkActive="active" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                          <i class="bi-file-earmark-plus fs-2"></i>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLink="/edit-application" (click)="headerTitle='View Application'" routerLinkActive="active" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                        <i class="bi-pencil-square fs-2"></i>
+                    </a>
+                </li>
+              </ul>
+          </div>
+      </div>
+      <div class="col-sm p-3 min-vh-100">
+      <div class="row">
+        <app-application-header [header]="headerTitle"></app-application-header>
+      </div>
+      <div class="row">
+        <router-outlet></router-outlet>
+      </div>
+      </div>
+  </div>
+</div>
+
+
+
