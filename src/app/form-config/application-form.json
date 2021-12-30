@@ -68,5 +68,11 @@
       "formControlName": "addressTransmit",
       "label": "Address to which it is to be transmitted",
       "value": ""
+    },
+    {
+      "type": "toggle",
+      "formControlName": "applicationStatus",
+      "label": "Address to which it is to be transmitted",
+      "value": ""
     }
   ]

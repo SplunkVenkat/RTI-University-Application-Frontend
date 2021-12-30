@@ -57,14 +57,14 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
   if(this.data.length == 1){
     debugger;
     let updateDropdown = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
-    updateDropdown!.options = this.dropDownData.filter((f:any)=>f.type == 'FE').map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+    updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
   }
   if(this.data.length == 2 || this.data.length == 3){
     debugger;
     let updateDropdown1 = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
-    updateDropdown1!.options = this.dropDownData.filter((f:any)=>f.type == 'FE').map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+    updateDropdown1!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
     let updateDropdown = this.data[1].formFields.find((d:any)=>d.formControlName==='appealEndorsement')
-    updateDropdown!.options = this.dropDownData.filter((f:any)=>f.type == 'FAE').map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+    updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
   }
   if(this.data.length === 3){
     this.data.forEach(d=>{
@@ -177,21 +177,29 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
       }
       if(this.mode === 'commissionappealapplication'){
         res.endorsement = res.endorsement.split(",");
-        firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.split(",");
         this.child.applicationForm.controls.forms.controls[0].setValue(res)
-        this.child.applicationForm.controls.forms.controls[1].setValue(firstAppeal)
+        if(firstAppeal){
+          firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.split(",");
+          this.child.applicationForm.controls.forms.controls[1].setValue(firstAppeal)
+        }
         this.child.applicationForm.controls.forms.controls[0].disable();
         this.child.applicationForm.controls.forms.controls[1].disable();
       }
       if(this.mode === "bulkEdit"){
         debugger;
         res.endorsement = res.endorsement.split(",");
-        firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.split(",");
         this.child.applicationForm.controls.forms.controls[0].setValue(res)
-        this.child.applicationForm.controls.forms.controls[1].setValue(firstAppeal)
-        this.child.applicationForm.controls.forms.controls[2].setValue(commissionAppeal)
-        console.log(this.child.applicationForm.controls.forms);
-        debugger;
+        if(firstAppeal){
+          firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.split(",");
+          this.child.applicationForm.controls.forms.controls[1].setValue(firstAppeal)
+        }else{
+          this.child.applicationForm.controls.forms.controls[1].disable();
+        }
+        if(commissionAppeal){
+          this.child.applicationForm.controls.forms.controls[2].setValue(commissionAppeal)
+        }else{
+          this.child.applicationForm.controls.forms.controls[2].disable();
+        }
         if(this.child.applicationForm.controls.forms.controls[0].get('isSvu').value == "1"){
           this.child.applicationForm.controls.forms.controls[0].get('applicationRelated').disable();
           this.child.applicationForm.controls.forms.controls[0].get('addressTransmitted').disable();

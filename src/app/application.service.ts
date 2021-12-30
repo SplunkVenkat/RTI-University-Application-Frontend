@@ -33,12 +33,15 @@ export class ApplicationService {
     return this.http.patch(this.REST_API_SERVER + 'application?id='+id, data, this.httpHeader);
   }
   public getApplicationRecords(query:string){
-    return this.http.get(this.REST_API_SERVER + 'applicationsrecords'+query)
+    return this.http.get(this.REST_API_SERVER + 'applicationsrecordsalert'+query)
   }
   public getApplicationById(id:string){
     return this.http.get(this.REST_API_SERVER + 'application/'+id)
   }
   public deleteApplicationById(queryParams:string){
     return this.http.delete(this.REST_API_SERVER +  'application/'+queryParams)
+  }
+  public getApplicationAlertRecords(query:string){
+    return this.http.get(this.REST_API_SERVER + 'applicationsrecordsalert'+query)
   }
 }

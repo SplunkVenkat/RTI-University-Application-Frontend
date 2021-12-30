@@ -20,6 +20,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatFormFieldModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -106,6 +106,13 @@ formFields:[
       "label": "Address to which it is to be transmitted",
       "value": "",
       "required": true
+    },
+    {
+      "type": "toggle",
+      "formControlName": "applicationStatus",
+      "label": "Application status",
+      "value": false,
+      "required": true
     }
   ]
 }
