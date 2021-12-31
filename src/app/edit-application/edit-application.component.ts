@@ -12,6 +12,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class EditApplicationComponent implements AfterViewInit {
   records : appRecords[] | any = [];
+  showAlertApplicants:boolean = false;
   recordsAlert : appRecords[] | any = [];
   displayedColumns: string[] = ['actions','applicationId', 'name', 'mobilenumber', 'dateCreated','firstAppeal','commissionAppeal','status'];
   dataSource = new MatTableDataSource<appRecords>(this.records);
@@ -21,6 +22,7 @@ export class EditApplicationComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator|any;
   @ViewChild(MatPaginator) paginatorAlert: MatPaginator|any;
   isLoading : boolean = false;
+  alertRecordCount :number = 0;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -38,13 +40,22 @@ export class EditApplicationComponent implements AfterViewInit {
             )
             .subscribe();
     this.getApplicationRecords("?page=1");
-    this.getApplicationRecordsAlert("?page=1");
+    this.applicationService.getApplicationAlertRecords("?page=1").subscribe(res=>{
+      this.alertRecordCount = res;
+    })
+    //this.getApplicationRecordsAlert("?page=1");
+  }
+  onValChange(val:any){
+    console.log(val);
+    this.showAlertApplicants = val.checked;
+    this.paginator.pageIndex=0;
+    this.getApplicationRecords("?page=1");
   }
 
   constructor(private applicationService:ApplicationService,private router:Router){}
   public getApplicationRecords(query:string){
     this.isLoading = true;
-   this.applicationService.getApplicationRecords(query).subscribe((records:any)=>{
+   this.applicationService.getApplicationRecords(query,this.showAlertApplicants).subscribe((records:any)=>{
      let data:any =[];
      records.results.forEach((element:any) => {
        data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
@@ -57,18 +68,18 @@ export class EditApplicationComponent implements AfterViewInit {
    })
   }
 
-  public getApplicationRecordsAlert(query:string){
-    this.isLoading = true;
-   this.applicationService.getApplicationAlertRecords(query).subscribe((records:any)=>{
-     let data:any =[];
-     records.results.forEach((element:any) => {
-       data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
-     });
-     this.paginatorAlert.length=records.count;
-     this.dataSourceAlert = data;
-     this.isLoading = false;
-   })
-  }
+  // public getApplicationRecordsAlert(query:string){
+  //   this.isLoading = true;
+  //  this.applicationService.getApplicationAlertRecords(query).subscribe((records:any)=>{
+  //    let data:any =[];
+  //    records.results.forEach((element:any) => {
+  //      data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
+  //    });
+  //    this.paginatorAlert.length=records.count;
+  //    this.dataSourceAlert = data;
+  //    this.isLoading = false;
+  //  })
+  // }
 
   onPageChange(evt:any){
     let params = '';
@@ -99,7 +110,7 @@ export class EditApplicationComponent implements AfterViewInit {
       params =  `?page=${evt.pageIndex + 1}`
     }
     }
-    this.getApplicationRecordsAlert(params);
+    //this.getApplicationRecordsAlert(params);
     console.log(params)
   }
   fa(element:any ,mode:string){

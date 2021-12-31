@@ -1,10 +1,31 @@
-<mat-form-field class="example-form-field" appearance="fill">
-  <mat-label>Search</mat-label>
-  <input matInput type="text" [(ngModel)]="value" #input>
-  <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-form-field>
+<div class="row">
+  <div class="col-sm-3">
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Search</mat-label>
+      <input matInput type="text" [(ngModel)]="value" #input>
+      <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div class="col-sm-3">
+    <div *ngIf="alertRecordCount > 0; else loggedOut">
+      <mat-icon class="blink" style="color: red;">report_problem</mat-icon> You have {{alertRecordCount}} Alert Applicants
+    </div>
+    
+    <ng-template #loggedOut>
+      You have no alert applicants
+    </ng-template> 
+ 
+  </div>
+  <div class="col-sm-3">
+    <mat-slide-toggle (change)="onValChange($event)"> Show Alert Applicants</mat-slide-toggle>
+  </div>
+  <div class="col-sm-3">
+    <mat-icon>pan_tool</mat-icon> <span> Click to Appeal</span>
+  </div>
+</div>
+
 <div class="mat-elevation-z8">
    
     <table mat-table [dataSource]="dataSource">
@@ -78,89 +99,9 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   
-    <mat-paginator [pageSize]=5
+    <mat-paginator [pageSize]=10
                    showFirstLastButtons 
                    (page)="onPageChange($event)"
-                   aria-label="Select page of periodic elements">
-    </mat-paginator>
-  </div>
-  <!--------------------------------new -->
-  <div class="mat-elevation-z8">
-   
-    <table mat-table [dataSource]="dataSourceAlert">
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let element"><button mat-button (click)="fa(element,'bulkEdit')">
-          <mat-icon>edit</mat-icon>
-      </button></td>
-      </ng-container>
-  
-      <!-- Position Column -->
-      <ng-container matColumnDef="applicationId">
-        <th mat-header-cell *matHeaderCellDef> Application Number </th>
-        <td mat-cell *matCellDef="let element">{{element.applicationId}}</td>
-      </ng-container>
-  
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
-  
-      <!-- Weight Column -->
-      <ng-container matColumnDef="mobilenumber">
-        <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
-        <td mat-cell *matCellDef="let element"> {{element.mobilenumber}} </td>
-      </ng-container>
-  
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="dateCreated">
-        <th mat-header-cell *matHeaderCellDef> Date Created </th>
-        <td mat-cell *matCellDef="let element"> {{element.dateCreated | date }} </td>
-      </ng-container>
-       <!-- Symbol Column -->
-       <ng-container matColumnDef="firstAppeal">
-        <th mat-header-cell *matHeaderCellDef> First Appeal </th>
-        <td mat-cell *matCellDef="let element">
-          <div *ngIf="element.firstAppeal; else loggedOut">
-            <mat-icon style="color: green;">check_circle</mat-icon>
-          </div>
-          
-          <ng-template #loggedOut>
-          <mat-icon style="cursor: pointer;"  (click)="fa(element,'firstappealapplication')">pan_tool</mat-icon>
-          </ng-template> </td>
-      </ng-container>
-        <!-- Symbol Column -->
-      <ng-container matColumnDef="commissionAppeal">
-        <th mat-header-cell *matHeaderCellDef> Commission Appeal </th>
-        <td mat-cell *matCellDef="let element">    
-          <div *ngIf="element.commissionAppeal; else loggedOut">
-            <mat-icon style="color: green;">check_circle</mat-icon>
-          </div>
-          
-          <ng-template #loggedOut>
-           <mat-icon style="cursor: pointer;" (click)="fa(element,'commissionappealapplication')">pan_tool</mat-icon>
-          </ng-template> </td>
-      </ng-container>
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Application Status </th>
-        <td mat-cell *matCellDef="let element">    
-          <div *ngIf="element.status else loggedOut">
-            <mat-icon style="color: green;">check_circle</mat-icon>
-          </div>
-          
-          <ng-template #loggedOut>
-            <mat-icon style="color: red;cursor: pointer;">cancel</mat-icon>
-          </ng-template> </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <mat-paginator [pageSize]=5
-                   showFirstLastButtons 
-                   (page)="onPageChange1($event)"
                    aria-label="Select page of periodic elements">
     </mat-paginator>
   </div>
