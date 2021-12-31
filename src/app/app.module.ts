@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {LoaderService} from './loader.service';
+import {LoaderInterceptorService} from './interceptors/loader-interceptor.service';
+import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     EditApplicationComponent,
     ApplicationHeaderComponent,
     ApplicationFormComponent,
-    MyModalComponent
+    MyModalComponent,
+    ConfirmationDialogComponent
    
   ],
   imports: [
@@ -50,7 +54,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatChipsModule,
     MatSlideToggleModule
   ],
-  providers: [],
+  providers: [
+    LoaderService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

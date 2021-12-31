@@ -12,28 +12,33 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class EditApplicationComponent implements AfterViewInit {
   records : appRecords[] | any = [];
-  displayedColumns: string[] = ['actions','applicationId', 'name', 'mobilenumber', 'dateCreated','firstAppeal','commissionAppeal'];
+  recordsAlert : appRecords[] | any = [];
+  displayedColumns: string[] = ['actions','applicationId', 'name', 'mobilenumber', 'dateCreated','firstAppeal','commissionAppeal','status'];
   dataSource = new MatTableDataSource<appRecords>(this.records);
+  dataSourceAlert = new MatTableDataSource<appRecords>(this.recordsAlert);
   @ViewChild('input') input: ElementRef|any;
   value :string='';
   @ViewChild(MatPaginator) paginator: MatPaginator|any;
+  @ViewChild(MatPaginator) paginatorAlert: MatPaginator|any;
   isLoading : boolean = false;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSourceAlert.paginator = this.paginatorAlert;
     fromEvent(this.input.nativeElement,'keyup')
             .pipe(
                 filter(Boolean),
                 debounceTime(1000),
                 distinctUntilChanged(),
                 tap((text) => {
-                  console.log(this.input.nativeElement.value)
+                  console.log("test",this.input.nativeElement.value)
                   this.paginator.pageIndex=0;
                   this.onPageChange("");
                 })
             )
             .subscribe();
     this.getApplicationRecords("?page=1");
+    this.getApplicationRecordsAlert("?page=1");
   }
 
   constructor(private applicationService:ApplicationService,private router:Router){}
@@ -42,12 +47,25 @@ export class EditApplicationComponent implements AfterViewInit {
    this.applicationService.getApplicationRecords(query).subscribe((records:any)=>{
      let data:any =[];
      records.results.forEach((element:any) => {
-       data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true})
+       data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
      });
      this.paginator.length=records.count;
      console.log(this.paginator)
      console.log(data)
      this.dataSource = data;
+     this.isLoading = false;
+   })
+  }
+
+  public getApplicationRecordsAlert(query:string){
+    this.isLoading = true;
+   this.applicationService.getApplicationAlertRecords(query).subscribe((records:any)=>{
+     let data:any =[];
+     records.results.forEach((element:any) => {
+       data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
+     });
+     this.paginatorAlert.length=records.count;
+     this.dataSourceAlert = data;
      this.isLoading = false;
    })
   }
@@ -66,6 +84,22 @@ export class EditApplicationComponent implements AfterViewInit {
     }
     }
     this.getApplicationRecords(params);
+    console.log(params)
+  }
+  onPageChange1(evt:any){
+    let params = '';
+    console.log(evt)
+    if(this.value){
+      params = `?search=${this.value}&search_fields=name&search_fields=application_number`
+    }
+    if(evt){
+    if(params){
+      params = params + `&page=${evt.pageIndex + 1}`
+    }else{
+      params =  `?page=${evt.pageIndex + 1}`
+    }
+    }
+    this.getApplicationRecordsAlert(params);
     console.log(params)
   }
   fa(element:any ,mode:string){

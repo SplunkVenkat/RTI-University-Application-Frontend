@@ -17,10 +17,15 @@
           </div>
       </div>
       <div class="col-sm p-3 min-vh-100">
+        <div class="progress-loader" *ngIf="loading">
+          <mat-progress-spinner [mode]="'indeterminate'">
+          </mat-progress-spinner>
+      </div>
       <div class="row">
         <app-application-header [header]="headerTitle"></app-application-header>
       </div>
       <div class="row">
+      
         <router-outlet></router-outlet>
       </div>
       </div>

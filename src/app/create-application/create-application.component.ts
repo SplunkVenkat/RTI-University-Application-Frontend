@@ -8,7 +8,8 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {ApplicationFormComponent} from '../shared-components/application-form/application-form.component';
 import {IFields,IForm} from '../shared-components/application-form/Iform';
 import {BASE_APPLICATION,FA_SECTION,CA_SECTION} from '../constants';
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
+import {ConfirmationDialogModel,ConfirmationDialogComponent} from '../modals/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-create-application',
@@ -35,15 +36,12 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
   
   ngOnInit(): void {
   this.dropDownData = this.applicationService.applicationDropdown;
-  console.log(history.state.data)
   const { mode, id } = history.state.data
   this.mode = mode;
   this.applicationId =id;
-  debugger;
  if(mode === 'freshapplication'){
     this.data = [BASE_APPLICATION]
     this.data[0].title = "Fresh Application";
-  
   }
   if(mode === 'firstappealapplication'){
     this.data = [BASE_APPLICATION,FA_SECTION];
@@ -55,68 +53,46 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
     d.showPrintButton = false;
   });
   if(this.data.length == 1){
-    debugger;
     let updateDropdown = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
     updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
   }
   if(this.data.length == 2 || this.data.length == 3){
-    debugger;
     let updateDropdown1 = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
     updateDropdown1!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
     let updateDropdown = this.data[1].formFields.find((d:any)=>d.formControlName==='appealEndorsement')
     updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
   }
-  if(this.data.length === 3){
-    this.data.forEach(d=>{
-     // d.showRevokeButton = true;
-    })
-  }
- 
-  
-  // let applicationDate = this.data.find(d=>d.formControlName==='endorsementDate')
-  // applicationDate!.value = getDate();
-  
   this.formConfig =  this.data;
-  debugger;
   }
   formChange(event:any){ 
     if(this.mode === 'freshapplication') {
     let payload = event.value.forms[0];
     let applicationNumber = this.processApplicationNumber(event.value.forms[0].dateCreated);
-    debugger;
     if (this.child.applicationForm.controls.forms.controls[0].get('isSvu').value == "1"){
       let lastDate = this.child.applicationForm.controls.forms.controls[0].get('lastDate').value;
       payload={...payload,...{lastDate}}
       payload.endorsement = payload.endorsement.toString()
     }
     payload = {...payload,...{applicationNumber}};
-    debugger;
-    
     this.applicationService.createFreshApplication(payload).subscribe((res:any)=>{
-      console.log(res);
       this.isLoading = false;
-      debugger;
       let endorsement = res.endorsement.split(",").map((a:any)=>this.dropDownData.find((b:any)=>b.id == Number(a)).valueData);
       this.openDialog("fresh",res.applicationNumber,res)
     
     })
     }
     if(this.mode === 'firstappealapplication') {
-      debugger;
       let payload = event.value.forms[0];
       payload.appealEndorsement = payload.appealEndorsement.toString();
       this.applicationService.updateFreshApplication({firstAppeal:payload},this.applicationId).subscribe((res:any)=>{
-        console.log(res);
         this.isLoading = false;
        this.openDialog("fa",res.firstAppeal.appealApplicationNumber,res)
       
       })
     }
     if(this.mode === 'commissionappealapplication') {
-      debugger;
       let payload = event.value.forms[0];
       this.applicationService.updateFreshApplication({commissionAppeal:payload},this.applicationId).subscribe((res:any)=>{
-        console.log(res);
         this.isLoading = false;
        this.openDialog("ca",res.commissionAppeal.commissionApplicationNumber,res)
       
@@ -124,34 +100,38 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
     }
     if(this.mode == 'bulkEdit'){
       let application = event.value.forms[0];
-      debugger;
       if (this.child.applicationForm.controls.forms.controls[0].get('isSvu').value == "1"){
         let lastDate = this.child.applicationForm.controls.forms.controls[0].get('lastDate').value;
         application={...application,...{lastDate}}
         application.endorsement = application.endorsement.toString()
       }
-      //----------------------------->
-      
-      let firstAppeal = event.value.forms[1];
-      firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.toString();
-      let commissionAppeal = event.value.forms[2];
-      debugger;
-      let payload = {...application,...{firstAppeal},...{commissionAppeal}}
-      console.log(payload)
+      let payload = { ...application };
+      if (event.value.forms.length === 2) {
+        let isFirstAppeal = Object.keys(event.value.forms[1]).includes('appealDate');
+        if(isFirstAppeal){
+          let firstAppeal = event.value.forms[1];
+          firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.toString();
+          payload = { ...payload, ...{ firstAppeal }};
+        }else{
+          let commissionAppeal = event.value.forms[1];
+          payload = { ...payload, ...{ commissionAppeal } }
+        }
+
+      } else if(event.value.forms.length === 3) {
+        let firstAppeal = event.value.forms[1];
+        firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.toString();
+        let commissionAppeal = event.value.forms[2];
+        payload = { ...payload, ...{ firstAppeal }, ...{ commissionAppeal } }
+      }
       this.applicationService.updateFreshApplication(payload,this.applicationId).subscribe((res:any)=>{
-        console.log(res);
         this.isLoading = false;
-       //this.openDialog(res.commissionAppeal.applicationNumber)
       
       })
 
     }
   }
   ngAfterViewInit(){
-    debugger;
- 
     this.applicationService.getApplicationById(this.applicationId).subscribe((res:any)=>{
-      debugger;
       this.dataForBulkEdit = JSON.parse(JSON.stringify(res));
       const {commissionAppeal , firstAppeal} = res;
       this.child.updateApplicationNumber(0,res.applicationNumber);
@@ -186,7 +166,6 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
         this.child.applicationForm.controls.forms.controls[1].disable();
       }
       if(this.mode === "bulkEdit"){
-        debugger;
         res.endorsement = res.endorsement.split(",");
         this.child.applicationForm.controls.forms.controls[0].setValue(res)
         if(firstAppeal){
@@ -208,20 +187,7 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
           this.child.applicationForm.controls.forms.controls[0].get('endorsementDate').disable();
         }
       }
-      if(this.mode === "freshApplication"){
-        // debugger;
-        // this.child.applicationForm.controls.forms.controls[0].setValue(res)
-        // this.child.applicationForm.controls.forms.controls[2].setValue(commissionAppeal)
-        // this.child.updateApplicationNumber(0,null);
-        // console.log(this.child.applicationForm.controls.forms);
-        // debugger;
-      }
-    })
-    
-    console.log(this.child.applicationForm);
-    //this.child.applicationForm.controls.forms.controls[0].controls.endorsement.setValue(['1']);
-   
-  }
+    })}
 
   mapPayloadForSave(data: any) {
     let lastDate = new Date(data.applicationLastDate)
@@ -249,10 +215,7 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
     }
     this.isLoading = true;
     this.applicationService.createFreshApplication(payload).subscribe((res:any)=>{
-      console.log(res);
       this.isLoading = false;
-     // this.openDialog(res)
-     
     })
     
   }
@@ -262,20 +225,6 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
     return parseInt(this.dateProcess(d.date().toString()) + this.dateProcess((d.month()+1).toString()) + d.year().toString().substr(-2))
   }
   generatePdfText(type: any, data: any) {
-    debugger;
-    // const d = new Date(data.dateReceive);
-    // d.setDate(d.getDate() + 20);
-    // let tempMain=`<div style='text-align:left;'>
-    // <p style="text-indent: 30px;">
-    //  <b> Endorsement No. Legal & RTI/Appl.No. (${data.applicationNumber}), dt:(${data.dateReceive})</b> 
-    //   </p><br>
-    //  <p style="text-indent: 30px;"><b> Copy of the application received from (${data.name})  is forwarded to the following sections and informed to provide the information to the applicant  related to their sections with a copy to this section on or before (${this.datepipe.transform(d, 'yyyy-MM-dd')}) without fail.  </b></p><br>
-    //  ${this.generateOrderedList(type,data)}
-    //  <div style="text-align:right;margin-top=300px;">REGISTRAR & PIO</div>
-    // </div>`
-    // return tempMain;
-
-
     let res = ""
     switch (type) {
       case "fresh": {
@@ -378,13 +327,11 @@ res = `<div style='text-align:left;'>
       frameDoc.document.write(content);
       frameDoc.document.write('<div id="footer" style="text-align:center;"><hr></div></body></html>');
       frameDoc.document.close();
-      //this.child.resetForm();
       setTimeout(()=> {
         let frames:any = window.frames;
         frames["frame3"].focus();
         frames["frame3"].print();
         document.body.removeChild(frame1);
-       // this.ngOnInit();
       }, 1000);
     }
 
@@ -422,10 +369,25 @@ res = `<div style='text-align:left;'>
       this.printApplication(type ,this.dataForBulkEdit)
     }
     deleteOrRevokeApplication(type:string){
-      debugger;
-      this.applicationService.deleteApplicationById(this.applicationId+type).subscribe((res)=>{
-        console.log("deleted");
-      })
+      this.revokeConfirmation(type)
     }
+    revokeConfirmation(type:string) {
+      const dialogData = new ConfirmationDialogModel('Confirm', type.indexOf('fa') >= 0 ? "Are you sure you want to revoke First Appeal ?" : "Are you sure you want to revoke Commission Appeal ?");
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+          maxWidth: '400px',
+          closeOnNavigation: true,
+          data: dialogData
+      })
+
+      dialogRef.afterClosed().subscribe(dialogResult => {
+          if (dialogResult) {
+             this.applicationService.deleteApplicationById(this.applicationId+type).subscribe((res)=>{
+        let index =  type.indexOf('fa') >= 0 ? 1 : 2;
+        this.child.applicationForm.controls.forms.controls[index].reset();
+        this.child.applicationForm.controls.forms.controls[index].disable();
+      })
+          }
+      });
+  }
 
 }
