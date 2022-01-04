@@ -1,0 +1,8 @@
+<mat-list>
+    <mat-list-item *ngFor="let data of dropdownData;index as i"><h3 matLine> {{data.valueData}} </h3> <button mat-button (click)="edit(data,i)"><mat-icon>edit</mat-icon></button><button mat-button (click)="delete(data,i)"><mat-icon>delete</mat-icon></button>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+</mat-list>
+<button mat-button  (click)="add({id:'',valueData:''})" ><mat-icon>add</mat-icon>Options</button>
+
+

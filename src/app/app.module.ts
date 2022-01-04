@@ -24,6 +24,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {LoaderService} from './loader.service';
 import {LoaderInterceptorService} from './interceptors/loader-interceptor.service';
 import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confirmation-dialog.component';
+import { SettingsComponent } from './settings/settings.component';
+import {MatListModule} from '@angular/material/list';
+import { EditAddComponent } from './modals/edit-add/edit-add.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,9 @@ import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confir
     ApplicationHeaderComponent,
     ApplicationFormComponent,
     MyModalComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SettingsComponent,
+    EditAddComponent
    
   ],
   imports: [
@@ -52,7 +57,8 @@ import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confir
     MatIconModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatListModule
   ],
   providers: [
     LoaderService,

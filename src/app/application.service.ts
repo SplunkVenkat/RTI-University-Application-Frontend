@@ -18,15 +18,24 @@ export class ApplicationService {
     })
   } 
 
-  public getApplicationDropdown() {
-    if (this.applicationDropdown.length === 0) {
-      return this.http.get(this.REST_API_SERVER + 'applicationdropdown').subscribe(res=>{
+  public getApplicationDropdown(update?:boolean) {
+      this.http.get(this.REST_API_SERVER + 'applicationdropdown').subscribe(res=>{
         this.applicationDropdown = res;
       })
     }
-    return of(this.applicationDropdown)
+  
+  public getAppDropdown(){
+    return this.http.get(this.REST_API_SERVER + 'applicationdropdown')
   }
-
+  public postAppDropdown(data:any){
+    return this.http.post(this.REST_API_SERVER + 'applicationdropdown',data,this.httpHeader)
+  }
+  public patchAppDropdown(id:any,data:any){
+    return this.http.patch(this.REST_API_SERVER + 'applicationdropdown?id='+id,data,this.httpHeader)
+  }
+  public deletAppDropdown(id:any){
+    return this.http.delete(this.REST_API_SERVER + 'applicationdropdown?id='+id)
+  }
   public createFreshApplication(data: any) {
     return this.http.post(this.REST_API_SERVER + 'application', data, this.httpHeader);
   }
