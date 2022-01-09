@@ -17,7 +17,7 @@ import {ConfirmationDialogModel,ConfirmationDialogComponent} from '../modals/con
   styleUrls: ['./create-application.component.css'],
   providers: [DatePipe]
 })
-export class CreateApplicationComponent implements OnInit , AfterViewInit {
+export class CreateApplicationComponent implements OnInit  {
   @ViewChild(ApplicationFormComponent) child: ApplicationFormComponent | any;
   formConfig : any = [];
   isLoading : boolean = false;
@@ -26,6 +26,7 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
   mode : string = '';
   applicationId:any;
   dataForBulkEdit :any;
+  ass:boolean = false;
   dateProcess =  (x: string): string => {
     if (x.length == 1){
       return "0" + x;
@@ -35,34 +36,43 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
   constructor(private applicationService:ApplicationService,public dialog: MatDialog,private router: Router,public datepipe: DatePipe) { }
   
   ngOnInit(): void {
-  this.dropDownData = this.applicationService.applicationDropdown;
-  const { mode, id } = history.state.data
-  this.mode = mode;
-  this.applicationId =id;
- if(mode === 'freshapplication'){
-    this.data = [BASE_APPLICATION]
-    this.data[0].title = "Fresh Application";
+  //this.dropDownData = this.applicationService.applicationDropdown;
+  this.applicationService.getAppDropdown().subscribe(res=>{
+    this.dropDownData = res;
+    this.buildFormStucture();
+    this.ass =true;
+    this.next()
+  })
   }
-  if(mode === 'firstappealapplication'){
-    this.data = [BASE_APPLICATION,FA_SECTION];
-  }
-  if(mode === 'commissionappealapplication' || mode === 'bulkEdit'){
-    this.data = [BASE_APPLICATION,FA_SECTION,CA_SECTION];
-  }
-  this.data.forEach(d=>{
-    d.showPrintButton = false;
-  });
-  if(this.data.length == 1){
-    let updateDropdown = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
-    updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
-  }
-  if(this.data.length == 2 || this.data.length == 3){
-    let updateDropdown1 = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
-    updateDropdown1!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
-    let updateDropdown = this.data[1].formFields.find((d:any)=>d.formControlName==='appealEndorsement')
-    updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
-  }
-  this.formConfig =  this.data;
+  buildFormStucture(){
+
+    const { mode, id } = history.state.data
+    this.mode = mode;
+    this.applicationId =id;
+   if(mode === 'freshapplication'){
+      this.data = [BASE_APPLICATION]
+      this.data[0].title = "Fresh Application";
+    }
+    if(mode === 'firstappealapplication'){
+      this.data = [BASE_APPLICATION,FA_SECTION];
+    }
+    if(mode === 'commissionappealapplication' || mode === 'bulkEdit'){
+      this.data = [BASE_APPLICATION,FA_SECTION,CA_SECTION];
+    }
+    this.data.forEach(d=>{
+      d.showPrintButton = false;
+    });
+    if(this.data.length == 1){
+      let updateDropdown = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
+      updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+    }
+    if(this.data.length == 2 || this.data.length == 3){
+      let updateDropdown1 = this.data[0].formFields.find((d:any)=>d.formControlName==='endorsement')
+      updateDropdown1!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+      let updateDropdown = this.data[1].formFields.find((d:any)=>d.formControlName==='appealEndorsement')
+      updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+    }
+    this.formConfig =  this.data;
   }
   formChange(event:any){ 
     if(this.mode === 'freshapplication') {
@@ -130,7 +140,8 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
 
     }
   }
-  ngAfterViewInit(){
+  next(){
+    if(this.applicationId){
     this.applicationService.getApplicationById(this.applicationId).subscribe((res:any)=>{
       this.dataForBulkEdit = JSON.parse(JSON.stringify(res));
       const {commissionAppeal , firstAppeal} = res;
@@ -187,7 +198,7 @@ export class CreateApplicationComponent implements OnInit , AfterViewInit {
           this.child.applicationForm.controls.forms.controls[0].get('endorsementDate').disable();
         }
       }
-    })}
+    })}}
 
   mapPayloadForSave(data: any) {
     let lastDate = new Date(data.applicationLastDate)

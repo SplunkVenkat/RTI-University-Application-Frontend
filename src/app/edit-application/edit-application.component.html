@@ -18,11 +18,14 @@
     </ng-template> 
  
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-2">
     <mat-slide-toggle (change)="onValChange($event)"> Show Alert Applicants</mat-slide-toggle>
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-2">
     <mat-icon>pan_tool</mat-icon> <span> Click to Appeal</span>
+  </div>
+  <div class="col-sm-2">
+    <button type="button"  class="btn btn-primary" (click)="exportToCSV()">Export to CSV</button>
   </div>
 </div>
 

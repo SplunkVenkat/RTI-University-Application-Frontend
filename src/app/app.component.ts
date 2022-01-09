@@ -11,8 +11,7 @@ export class AppComponent {
   headerTitle='';
   loading:boolean = false;
 
-  constructor(private applicationService:ApplicationService,
-    private loaderService: LoaderService){
+  constructor(private loaderService: LoaderService){
       this.loaderService.isLoading.subscribe((v) => {
         console.log(v);
         this.loading = v;
@@ -20,7 +19,6 @@ export class AppComponent {
     }
 
   ngOnInit() { 
-    this.applicationService.getApplicationDropdown()
   }
 
 }

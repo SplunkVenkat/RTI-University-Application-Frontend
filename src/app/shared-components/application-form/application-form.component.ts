@@ -91,9 +91,10 @@ export class ApplicationFormComponent implements OnInit {
         }
       })
   }
-    if(formname == 'dateCreated'){
-      const d = new Date(this.applicationForm.controls.forms.controls[type].get('dateCreated').value);
-      d.setDate(d.getDate() + 30);
+  console.log(formname)
+    if(formname == 'dateReceive'){
+      const d = new Date(this.applicationForm.controls.forms.controls[type].get('dateReceive').value);
+      d.setDate(d.getDate() + 28);
       this.applicationForm.controls.forms.controls[type].get('lastDate').setValue(moment(new Date(d)).format('YYYY-MM-DD'));
     }
 }

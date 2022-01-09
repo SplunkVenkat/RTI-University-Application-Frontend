@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class ApplicationService {
 
-  private REST_API_SERVER = "http://127.0.0.1:8000/playground/";
+  public REST_API_SERVER = "http://127.0.0.1:8000/playground/";
   public applicationDropdown : any =[];
 
   constructor(private http: HttpClient) { }
@@ -17,13 +17,6 @@ export class ApplicationService {
       'Content-Type': 'application/json'
     })
   } 
-
-  public getApplicationDropdown(update?:boolean) {
-      this.http.get(this.REST_API_SERVER + 'applicationdropdown').subscribe(res=>{
-        this.applicationDropdown = res;
-      })
-    }
-  
   public getAppDropdown(){
     return this.http.get(this.REST_API_SERVER + 'applicationdropdown')
   }

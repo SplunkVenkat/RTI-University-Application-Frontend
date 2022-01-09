@@ -121,6 +121,9 @@ export class EditApplicationComponent implements AfterViewInit {
     console.log(id);
    // this.router.navigateByUrl('/create-application', { state:{data:{ mode,id:element.id } }});
   }
+  exportToCSV(){
+    window.open(this.applicationService.REST_API_SERVER+'csvdownload')
+  }
 }
 
 export interface appRecords {

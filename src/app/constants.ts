@@ -108,6 +108,13 @@ formFields:[
       "required": true
     },
     {
+      "type": "textarea",
+      "formControlName": "description",
+      "label": "Description",
+      "value": "",
+      "required": false
+    },
+    {
       "type": "toggle",
       "formControlName": "applicationStatus",
       "label": "Application status",
