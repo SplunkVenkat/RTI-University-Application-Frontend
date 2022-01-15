@@ -27,6 +27,8 @@ import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confir
 import { SettingsComponent } from './settings/settings.component';
 import {MatListModule} from '@angular/material/list';
 import { EditAddComponent } from './modals/edit-add/edit-add.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { EditAddComponent } from './modals/edit-add/edit-add.component';
     MyModalComponent,
     ConfirmationDialogComponent,
     SettingsComponent,
-    EditAddComponent
+    EditAddComponent,
+    HomeComponent,
+    LoginComponent
    
   ],
   imports: [
