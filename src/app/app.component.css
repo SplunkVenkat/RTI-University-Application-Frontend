@@ -10,6 +10,15 @@
     z-index: 999;
     background-color: rgba(0,0,0,0.3);
 }
-.mat-progress-spinner circle, .mat-spinner circle {
-    /* stroke: #665b7d; */
+
+.mat-spinner-color::ng-deep circle{
+    stroke: #0d6efd !important;
+    }
+.navbar .navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
+.h-70{
+    height: 70px;
 }
