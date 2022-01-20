@@ -353,7 +353,6 @@ res = `<div style='text-align:left;'>
       });
   
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
         if(result.event === 'print'){
           this.printApplication(type ,pdfData)
         }else{

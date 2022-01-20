@@ -33,7 +33,6 @@ export class EditApplicationComponent implements AfterViewInit {
                 debounceTime(1000),
                 distinctUntilChanged(),
                 tap((text) => {
-                  console.log("test",this.input.nativeElement.value)
                   this.paginator.pageIndex=0;
                   this.onPageChange("");
                 })
@@ -46,7 +45,6 @@ export class EditApplicationComponent implements AfterViewInit {
     //this.getApplicationRecordsAlert("?page=1");
   }
   onValChange(val:any){
-    console.log(val);
     this.showAlertApplicants = val.checked;
     this.paginator.pageIndex=0;
     this.getApplicationRecords("?page=1");
@@ -61,8 +59,6 @@ export class EditApplicationComponent implements AfterViewInit {
        data.push({id :element.id ,name:element.name,applicationId:element.applicationNumber,dateCreated:element.dateCreated,mobilenumber:element.mobilenumber,firstAppeal:element.firstAppeal ? true : false,commissionAppeal:element.commissionAppeal ? true :false,actions:true,status:element.applicationStatus})
      });
      this.paginator.length=records.count;
-     console.log(this.paginator)
-     console.log(data)
      this.dataSource = data;
      this.isLoading = false;
    })
@@ -83,7 +79,6 @@ export class EditApplicationComponent implements AfterViewInit {
 
   onPageChange(evt:any){
     let params = '';
-    console.log(evt)
     if(this.value){
       params = `?search=${this.value}&search_fields=name&search_fields=application_number`
     }
@@ -95,11 +90,9 @@ export class EditApplicationComponent implements AfterViewInit {
     }
     }
     this.getApplicationRecords(params);
-    console.log(params)
   }
   onPageChange1(evt:any){
     let params = '';
-    console.log(evt)
     if(this.value){
       params = `?search=${this.value}&search_fields=name&search_fields=application_number`
     }
@@ -110,15 +103,12 @@ export class EditApplicationComponent implements AfterViewInit {
       params =  `?page=${evt.pageIndex + 1}`
     }
     }
-    //this.getApplicationRecordsAlert(params);
-    console.log(params)
   }
   fa(element:any ,mode:string){
     debugger
     this.router.navigateByUrl('/home/create-application', { state:{data:{ mode,id:element.id } }});
   }
   bulkEdit(id:any){
-    console.log(id);
    // this.router.navigateByUrl('/create-application', { state:{data:{ mode,id:element.id } }});
   }
   exportToCSV(){

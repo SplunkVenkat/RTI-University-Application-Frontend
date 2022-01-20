@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router} from '@angular/router';
+import {ApplicationService} from './../application.service';
 
 @Component({
   selector: 'app-login',
@@ -7,17 +8,21 @@ import { Router} from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  userId:string='';
+  username:string='';
   password:string='';
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private applicationService:ApplicationService) { }
 
   ngOnInit(): void {
-    localStorage.setItem('isAuthenticated','0')
+    localStorage.setItem('user','')
   }
-  login(){
-    this.router.navigate(['home']);
-    localStorage.setItem('isAuthenticated','1');
+  login() {
+    this.applicationService.login({ 'username': this.username, 'password': this.password }).subscribe((res: any) => {
+      if (res && res.token) {
+        localStorage.setItem('user', res.token);
+        this.router.navigate(['home']);
+      }
+    })
   }
 
 }

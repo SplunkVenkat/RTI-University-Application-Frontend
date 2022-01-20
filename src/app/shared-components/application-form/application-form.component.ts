@@ -53,11 +53,8 @@ export class ApplicationFormComponent implements OnInit {
     return group;
   }
   data(){
-   // this.applicationForm.get('endorsementSection').disable();
-    console.log(this.applicationForm.value)
   }
   onValueChange(type:number, formname :string, value?: any){
-  console.log(type,formname)
    let data1 = ['applicationRelated', 'addressTransmitted'];
   let data2 = ['endorsementDate', 'endorsement', 'lastDate'];
   if(formname === 'isSvu' && value === 1){
@@ -91,7 +88,6 @@ export class ApplicationFormComponent implements OnInit {
         }
       })
   }
-  console.log(formname)
     if(formname == 'dateReceive'){
       const d = new Date(this.applicationForm.controls.forms.controls[type].get('dateReceive').value);
       d.setDate(d.getDate() + 28);
@@ -137,7 +133,6 @@ export class ApplicationFormComponent implements OnInit {
      this.valueChange.emit({ type, formname, value })
   }
   public resetForm(){
-    console.log("child")
     this.applicationForm.reset();
     this.ngOnInit()
   }

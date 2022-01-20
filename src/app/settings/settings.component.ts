@@ -20,17 +20,14 @@ export class SettingsComponent implements OnInit {
     })
   }
   edit(value:any,index:any){
-    console.log(this.dropdownData[index])
     const dialogRef = this.dialog.open(EditAddComponent, {
       width: '250px',
       data:{id:value.id,valueData:value.valueData,heading:"Edit option"}
     });
     
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
       this.applicationService.patchAppDropdown(result.id,{valueData:result.valueData}).subscribe(res=>{
         this.dropdownData[index].valueData=result.valueData;
-        console.log(res)
       })
     });
   }
@@ -43,12 +40,10 @@ export class SettingsComponent implements OnInit {
         closeOnNavigation: true,
         data: dialogData
     })
-    console.log(index)
     dialogRef.afterClosed().subscribe(dialogResult => {
     
         if (dialogResult) {
            this.applicationService.deletAppDropdown(data.id).subscribe(res=>{
-             console.log(res)
              this.dropdownData.splice(index, 1)
            })
         }
@@ -61,9 +56,7 @@ export class SettingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
       this.applicationService.postAppDropdown({valueData:result.valueData}).subscribe(res=>{
-        console.log(res)
         this.dropdownData.push(res)
       })
     });

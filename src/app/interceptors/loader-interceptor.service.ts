@@ -26,10 +26,16 @@ export class LoaderInterceptorService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Token ${user}`
+        }
+      });
+    }
 
     this.requests.push(req);
-
-    console.log("No of requests--->" + this.requests.length);
 
     this.loaderService.isLoading.next(true);
     return  new Observable((observer: Observer<any>) => {
