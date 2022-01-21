@@ -9,6 +9,7 @@ RUN npm install
 RUN npm run build 
 # Stage 2, use the compiled app, ready for production with Nginx
 FROM nginx:latest
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/local/app/dist/college /usr/share/nginx/html
 
 # Expose port 80
