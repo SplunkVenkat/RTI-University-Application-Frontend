@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class ApplicationService {
 
-  public REST_API_SERVER = "http://host.docker.internal:8000/playground/";
+  public REST_API_SERVER = "/playground/";
   public applicationDropdown : any =[];
 
   constructor(private http: HttpClient) { }
@@ -50,6 +50,10 @@ export class ApplicationService {
     }))
   }
   public login(data:any){
+<<<<<<< HEAD
     return this.http.post('http://host.docker.internal:8000/api-token-auth/',data,this.httpHeader)
+=======
+    return this.http.post('/api-token-auth/',data,this.httpHeader)
+>>>>>>> bbfd04d92cb880b2659d706c3d2dbeef85a86bf0
   }
 }
