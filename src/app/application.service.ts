@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class ApplicationService {
 
-  public REST_API_SERVER = "http://127.0.0.1:8000/playground/";
+  public REST_API_SERVER = "/playground/";
   public applicationDropdown : any =[];
 
   constructor(private http: HttpClient) { }
@@ -50,6 +50,6 @@ export class ApplicationService {
     }))
   }
   public login(data:any){
-    return this.http.post('http://127.0.0.1:8000/api-token-auth/',data,this.httpHeader)
+    return this.http.post('/api-token-auth/',data,this.httpHeader)
   }
 }
