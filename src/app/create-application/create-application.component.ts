@@ -356,7 +356,7 @@ res = `<div style='text-align:left;'>
         if(result.event === 'print'){
           this.printApplication(type ,pdfData)
         }else{
-          this.router.navigate(['edit-application']);
+          this.router.navigateByUrl('/home/edit-application')
         }
       });
     }
