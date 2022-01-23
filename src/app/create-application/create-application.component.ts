@@ -86,7 +86,6 @@ export class CreateApplicationComponent implements OnInit  {
     payload = {...payload,...{applicationNumber}};
     this.applicationService.createFreshApplication(payload).subscribe((res:any)=>{
       this.isLoading = false;
-      let endorsement = res.endorsement.split(",").map((a:any)=>this.dropDownData.find((b:any)=>b.id == Number(a)).valueData);
       this.openDialog("fresh",res.applicationNumber,res)
     
     })
