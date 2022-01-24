@@ -21,6 +21,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {LoaderService} from './loader.service';
 import {LoaderInterceptorService} from './interceptors/loader-interceptor.service';
 import { ConfirmationDialogComponent } from './modals/confirmation-dialog/confirmation-dialog.component';
@@ -62,7 +63,8 @@ import { LoginComponent } from './login/login.component';
     MatProgressSpinnerModule,
     MatChipsModule,
     MatSlideToggleModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule
   ],
   providers: [
     LoaderService,

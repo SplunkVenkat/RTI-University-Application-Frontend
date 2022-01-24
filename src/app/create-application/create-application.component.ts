@@ -10,6 +10,7 @@ import {IFields,IForm} from '../shared-components/application-form/Iform';
 import {BASE_APPLICATION,FA_SECTION,CA_SECTION} from '../constants';
 import { DatePipe } from '@angular/common';
 import {ConfirmationDialogModel,ConfirmationDialogComponent} from '../modals/confirmation-dialog/confirmation-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-application',
@@ -33,7 +34,7 @@ export class CreateApplicationComponent implements OnInit  {
     }
     return x;
 }
-  constructor(private applicationService:ApplicationService,public dialog: MatDialog,private router: Router,public datepipe: DatePipe) { }
+  constructor(private applicationService:ApplicationService,public dialog: MatDialog,private router: Router,public datepipe: DatePipe,private snackBar: MatSnackBar) { }
   
   ngOnInit(): void {
   //this.dropDownData = this.applicationService.applicationDropdown;
@@ -134,6 +135,9 @@ export class CreateApplicationComponent implements OnInit  {
       }
       this.applicationService.updateFreshApplication(payload,this.applicationId).subscribe((res:any)=>{
         this.isLoading = false;
+        this.snackBar.open('Application updated sucessfully','',{
+          duration: 3000
+        });
       
       })
 

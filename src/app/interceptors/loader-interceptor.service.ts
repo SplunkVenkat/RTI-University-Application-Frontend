@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, Observer } from 'rxjs';
 import { LoaderService } from '../loader.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ import { LoaderService } from '../loader.service';
 export class LoaderInterceptorService implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
 
-  constructor(private loaderService: LoaderService) { }
+  constructor(private loaderService: LoaderService,private snackBar: MatSnackBar) { }
 
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);
@@ -49,7 +50,10 @@ export class LoaderInterceptorService implements HttpInterceptor {
           }
         },
         err => {
-          alert('error' + err);
+          this.snackBar.open('Something went wrong . Please contact admin','',{
+            duration: 3000
+          })
+          //alert('error' + err);
           this.removeRequest(req);
           observer.error(err);
         },

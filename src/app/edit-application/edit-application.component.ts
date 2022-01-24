@@ -44,6 +44,11 @@ export class EditApplicationComponent implements AfterViewInit {
     })
     //this.getApplicationRecordsAlert("?page=1");
   }
+  clearSearch(){
+    this.value='';
+    this.paginator.pageIndex=0;
+    this.onPageChange("");
+  }
   onValChange(val:any){
     this.showAlertApplicants = val.checked;
     this.paginator.pageIndex=0;
