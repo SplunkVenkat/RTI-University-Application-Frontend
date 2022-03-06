@@ -246,33 +246,33 @@ export class CreateApplicationComponent implements OnInit  {
         d.setDate(d.getDate() + 20);
         res = `<div style='text-align:left;'>
     <p style="text-indent: 30px;">
-     <b> Endorsement No. Legal & RTI/Appl.No. (${data.applicationNumber}), dt:(${data.dateReceive})</b> 
+     <b> Endorsement No. Legal & RTI/Appl.No. ${data.applicationNumber}, date: ${this.datepipe.transform(new Date(data.dateReceive), 'dd-MM-yyyy')}</b> 
       </p><br>
-     <p style="text-indent: 30px;"><b> Copy of the application received from (${data.name})  is forwarded to the following sections and informed to provide the information to the applicant  related to their sections with a copy to this section on or before (${this.datepipe.transform(d, 'yyyy-MM-dd')}) without fail.  </b></p><br>
+     <p style="text-indent: 30px;"><b> Copy of the application received from ${data.name}  is forwarded to the following sections and informed to provide the information to the applicant  related to their sections with a copy to this section on or before ${this.datepipe.transform(d, 'dd-MM-yyyy')} without fail.  </b></p><br>
      ${this.generateOrderedList(type, data)}
-     <div style="text-align:right;margin-top=300px;">REGISTRAR & PIO</div>
+     <div style="text-align:right;margin-top=300px;">PIO</div>
     </div>`
         break;
       }
       case "fa": {
 res = `<div style='text-align:left;'>
 <p style="text-indent: 30px;">
- <b> Endorsement No. Legal & RTI/Appl.No. (${data.firstAppeal.appealApplicationNumber}), dt:(${data.firstAppeal.appealDateReceive})</b> 
+ <b> Endorsement No. Legal & RTI/Appl.No. ${data.firstAppeal.appealApplicationNumber}, date: ${this.datepipe.transform(new Date(data.firstAppeal.appealDateReceive), 'dd-MM-yyyy')}</b> 
   </p><br>
- <p style="text-indent: 30px;"><b>Copy of the First appeal is forwarded to the following sections (${this.getFirstAppealReasons(data.firstAppeal.appealReason)}) within the period of 30 days from the date of receipt of the application by the University i.e. (${this.datepipe.transform(addDaysToDate(data.dateReceive,30), 'yyyy-MM-dd')}). The applicant has filed First Appeal to provide the relevant information. The following sections is hereby directed to provide the information within (${this.datepipe.transform(addDaysToDate(data.firstAppeal.appealDateReceive,25), 'yyyy-MM-dd')}) to the applicant  related to their sections with a copy to this section. Failing which the concerned section head & concerned assistant will be held responsible and need to face the consequences in the order of the Hon’ble Commisison, RTI.
+ <p style="text-indent: 30px;"><b>Copy of the First appeal is forwarded to the following sections ${this.getFirstAppealReasons(data.firstAppeal.appealReason)} within the period of 30 days from the date of receipt of the application by the University i.e. ${this.datepipe.transform(addDaysToDate(data.dateReceive,30), 'dd-MM-yyyy')}. The applicant has filed First Appeal to provide the relevant information. The following sections is hereby directed to provide the information within ${this.datepipe.transform(addDaysToDate(data.firstAppeal.appealDateReceive,25), 'dd-MM-yyyy')} to the applicant  related to their sections with a copy to this section. Failing which the concerned section head & concerned assistant will be held responsible and need to face the consequences if any order is passed by the Hon’ble Commisison, RTI.
  </b></p><br>
  ${this.generateOrderedList(type, data)}
- <div style="text-align:right;margin-top=300px;">REGISTRAR & PIO</div>
+ <div style="text-align:right;margin-top=300px;">PIO</div>
 </div>`
     break;
       }
       case "ca": {
         res = `<div style='text-align:left;'>
     <p style="text-indent: 30px;">
-     <b> Endorsement No. Legal & RTI/Appl.No. (${data.commissionAppeal.commissionApplicationNumber}), dt:(${data.commissionAppeal.noticeDate})</b> 
+     <b> Endorsement No. Legal & RTI/Appl.No. ${data.commissionAppeal.commissionApplicationNumber}, date: ${this.datepipe.transform(new Date(data.commissionAppeal.noticeDate), 'dd-MM-yyyy')} </b> 
       </p><br>
      <p style="text-indent: 30px;"><b>Copy of the Notice received from the Hon’ble RTI Commission is forwarded to the following sections to submit a brief report along with the supporting documents to the undersigned within 2 days from the date of receipt of this letter.</b></p><br>
-     <div style="text-align:right;margin-top=300px;">REGISTRAR & PIO</div>
+     <div style="text-align:right;margin-top=300px;">PIO</div>
     </div>`
         break;
       }
