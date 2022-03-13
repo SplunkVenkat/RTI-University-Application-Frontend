@@ -11,6 +11,7 @@ import {BASE_APPLICATION,FA_SECTION,CA_SECTION} from '../constants';
 import { DatePipe } from '@angular/common';
 import {ConfirmationDialogModel,ConfirmationDialogComponent} from '../modals/confirmation-dialog/confirmation-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ViewportScroller} from '@angular/common';
 
 @Component({
   selector: 'app-create-application',
@@ -34,7 +35,12 @@ export class CreateApplicationComponent implements OnInit  {
     }
     return x;
 }
-  constructor(private applicationService:ApplicationService,public dialog: MatDialog,private router: Router,public datepipe: DatePipe,private snackBar: MatSnackBar) { }
+  constructor(private applicationService:ApplicationService,
+    public dialog: MatDialog,
+    private router: Router,
+    public datepipe: DatePipe,
+    private snackBar: MatSnackBar,
+    private scroller:ViewportScroller) { }
   
   ngOnInit(): void {
   //this.dropDownData = this.applicationService.applicationDropdown;
@@ -44,6 +50,7 @@ export class CreateApplicationComponent implements OnInit  {
     this.ass =true;
     this.next()
   })
+  this.scroller.scrollToPosition([0,0]);
   }
   buildFormStucture(){
 
@@ -72,6 +79,10 @@ export class CreateApplicationComponent implements OnInit  {
       updateDropdown1!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
       let updateDropdown = this.data[1].formFields.find((d:any)=>d.formControlName==='appealEndorsement')
       updateDropdown!.options = this.dropDownData.map((m:any)=>{return {'id':m.id,'value':m.valueData}});
+      if (this.data.length > 2) {
+        let updateDropdown2 = this.data[2].formFields.find((d: any) => d.formControlName === 'commissionEndorsement')
+        updateDropdown2!.options = this.dropDownData.map((m: any) => { return { 'id': m.id, 'value': m.valueData } });
+      }
     }
     this.formConfig =  this.data;
   }
@@ -102,6 +113,7 @@ export class CreateApplicationComponent implements OnInit  {
     }
     if(this.mode === 'commissionappealapplication') {
       let payload = event.value.forms[0];
+      payload.commissionEndorsement = payload.commissionEndorsement.toString();
       this.applicationService.updateFreshApplication({commissionAppeal:payload},this.applicationId).subscribe((res:any)=>{
         this.isLoading = false;
        this.openDialog("ca",res.commissionAppeal.commissionApplicationNumber,res)
@@ -124,6 +136,7 @@ export class CreateApplicationComponent implements OnInit  {
           payload = { ...payload, ...{ firstAppeal }};
         }else{
           let commissionAppeal = event.value.forms[1];
+          commissionAppeal.commissionEndorsement = commissionAppeal.commissionEndorsement.toString();
           payload = { ...payload, ...{ commissionAppeal } }
         }
 
@@ -131,6 +144,7 @@ export class CreateApplicationComponent implements OnInit  {
         let firstAppeal = event.value.forms[1];
         firstAppeal.appealEndorsement = firstAppeal.appealEndorsement.toString();
         let commissionAppeal = event.value.forms[2];
+        commissionAppeal.commissionEndorsement = commissionAppeal.commissionEndorsement.toString();
         payload = { ...payload, ...{ firstAppeal }, ...{ commissionAppeal } }
       }
       this.applicationService.updateFreshApplication(payload,this.applicationId).subscribe((res:any)=>{
@@ -189,6 +203,7 @@ export class CreateApplicationComponent implements OnInit  {
           this.child.applicationForm.controls.forms.controls[1].disable();
         }
         if(commissionAppeal){
+          commissionAppeal.commissionEndorsement = commissionAppeal.commissionEndorsement.split(",");
           this.child.applicationForm.controls.forms.controls[2].setValue(commissionAppeal)
         }else{
           this.child.applicationForm.controls.forms.controls[2].disable();
@@ -272,6 +287,7 @@ res = `<div style='text-align:left;'>
      <b> Endorsement No. Legal & RTI/Appl.No. ${data.commissionAppeal.commissionApplicationNumber}, date: ${this.datepipe.transform(new Date(data.commissionAppeal.noticeDate), 'dd-MM-yyyy')} </b> 
       </p><br>
      <p style="text-indent: 30px;"><b>Copy of the Notice received from the Hon’ble RTI Commission is forwarded to the following sections to submit a brief report along with the supporting documents to the undersigned within 2 days from the date of receipt of this letter.</b></p><br>
+     ${this.generateOrderedList(type, data)}
      <div style="text-align:right;margin-top=300px;">PIO</div>
     </div>`
         break;
@@ -301,6 +317,12 @@ res = `<div style='text-align:left;'>
         break;
       }
       case "ca": {
+        let endorsement = data.commissionAppeal.commissionEndorsement.split(",").map((a:any)=>this.dropDownData.find((b:any)=>b.id == Number(a)).valueData);
+        let ol = "";
+        endorsement.forEach((element:any) => {
+          ol += `<li>${element}</li>`
+        });
+        res = `<ol>${ol}</ol>`
         break;
       }
     }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ViewportScroller} from '@angular/common';
 import {ApplicationService} from '../application.service';
 import {DialogData,EditAddComponent} from '../modals/edit-add/edit-add.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -12,12 +13,13 @@ import {ConfirmationDialogComponent,ConfirmationDialogModel} from '../modals/con
 export class SettingsComponent implements OnInit {
   dropdownData:any = [];
 
-  constructor(private applicationService:ApplicationService,public dialog: MatDialog) { }
+  constructor(private applicationService:ApplicationService,public dialog: MatDialog,private scroller:ViewportScroller) { }
 
   ngOnInit(): void {
     this.applicationService.getAppDropdown().subscribe(res=>{
       this.dropdownData = res;
     })
+    this.scroller.scrollToPosition([0,0]);
   }
   edit(value:any,index:any){
     const dialogRef = this.dialog.open(EditAddComponent, {

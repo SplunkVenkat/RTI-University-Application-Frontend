@@ -31,4 +31,5 @@ class CommissionAppeal {
     public commissionApplicationNumber : string = '';
     public commissionCaseNumber : string = '';
     public commissionFileNumber : string = '';
+    public commissionEndorsement : string = '';
 }

@@ -223,6 +223,23 @@ formFields:[
       "label": "Date of hearing",
       "value": "",
       "required": true
+    },
+    {
+      "type": "dropdown",
+      "formControlName": "commissionEndorsement",
+      "label": "CA Endorsement given sections",
+      "value": "",
+      "options": [
+        {
+          "id": 1,
+          "value": "Opt1"
+        },
+        {
+          "id": 2,
+          "value": "Opt2"
+        }
+      ],
+      "required": true
     }
   ]
 }

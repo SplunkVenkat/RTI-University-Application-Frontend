@@ -5,6 +5,7 @@ import {fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import {ApplicationService} from './../application.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import {ViewportScroller} from '@angular/common';
 @Component({
   selector: 'app-edit-application',
   templateUrl: './edit-application.component.html',
@@ -43,6 +44,7 @@ export class EditApplicationComponent implements AfterViewInit {
       this.alertRecordCount = res;
     })
     //this.getApplicationRecordsAlert("?page=1");
+    this.scroller.scrollToPosition([0,0]);
   }
   clearSearch(){
     this.value='';
@@ -55,7 +57,7 @@ export class EditApplicationComponent implements AfterViewInit {
     this.getApplicationRecords("?page=1");
   }
 
-  constructor(private applicationService:ApplicationService,private router:Router){}
+  constructor(private applicationService:ApplicationService,private router:Router,private scroller:ViewportScroller){}
   public getApplicationRecords(query:string){
     this.isLoading = true;
    this.applicationService.getApplicationRecords(query,this.showAlertApplicants).subscribe((records:any)=>{
@@ -110,7 +112,6 @@ export class EditApplicationComponent implements AfterViewInit {
     }
   }
   fa(element:any ,mode:string){
-    debugger
     this.router.navigateByUrl('/home/create-application', { state:{data:{ mode,id:element.id } }});
   }
   bulkEdit(id:any){
